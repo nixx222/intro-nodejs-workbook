@@ -3,7 +3,7 @@ const moment = require("moment");
 
 const currentYear = moment().year();
 
-const isLeapYear = moment([2025]).isLeapYear();
+const isLeapYear = moment([currentYear]).isLeapYear();
 
 if (isLeapYear) {
     console.log(`The year ${currentYear} is a leap year!`);
