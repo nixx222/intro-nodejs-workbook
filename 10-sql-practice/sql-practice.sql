@@ -62,7 +62,11 @@ INSERT INTO developers (id, name, country, created_language_id) VALUES
 
 -- SELECT everything in the programming_languages table. 
 
+-- SELECT * FROM programming_Languages;
+
 -- SELECT everything in the developers table. 
+
+SELECT * FROM developers;
 
 -- INSERT the following two programming languages into programming_languages table:
 	-- first language to insert: 
@@ -78,16 +82,34 @@ INSERT INTO developers (id, name, country, created_language_id) VALUES
         -- pypl_rank: 18
         -- tiobe_rank: 28
 
+        -- INSERT INTO programming_languages(name,released_year,githut_rank,pypl_rank,tiobe_rank)
+        -- VALUES ('Dart', 2011, 19, 14, 37),
+        -- VALUES ('Lua', 1993, 25, 18, 28);
+
 -- Write a command to UPDATE Rust's tiobe_rank to 20. 
+
+-- UPDATE programming_languages SET tiobe_rank = 20 WHERE name = 'Rust';
 
 -- Write a command to DELETE Scala from the programming_languages table. 
 
+-- DELETE FROM programming_languages WHERE name = 'Scala';
+
 -- What are all of the programming languages that were released before the year 2000?
+
+-- SELECT * FROM programming _languages WHERE released_year < 2000;
 
 -- What are all of the programming languages that have a GitHub rank between 1 and 5? 
 
+-- SELECT * FROM programming_languages WHERE githut_rank BETWEEN 1 AND 5;
+
 -- What is the average released year of all the programming languages in the table?
+
+-- SELECT AVG(released_year) FROM programming_languages;
 
 -- What is the most recently released programming language in the table?
 
+-- SELECT * FROM programming_languages ORDER BY released_year DEC LIMIT 1;
+
 -- What are all the programming languages and their respective creators? Use INNER JOIN to join the two tables together. 
+
+-- SELECT * FROM programming_languages JOIN developers ON programming_languages.id = developers.created_languages_id;
