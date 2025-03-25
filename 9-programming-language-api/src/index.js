@@ -1,7 +1,7 @@
 import express from "express"; //external module for using express
 import pg from "pg";
 const { Client } = pg;
-import config from "./config.js"; // internal module for connecting to our config fil
+import config from "./config.js"; // internal module for connecting to our config file
 
 //boiler plate express code which allows us to run our web server
 const app = express();
@@ -52,6 +52,34 @@ async function addOneLanguage(obj) {
 
 }
 
+async function getAllLanguagesSortedByYear() {
+  const client = new Client(config); // creating our database Client with our config values
+  await client.connect();
+  let result = await client.query("SELECT * FROM programming_languages ORDER BY released_year");
+  console.log(result.rows);
+  await client.end();
+  return result.rows;
+}
+
+async function getAllLanguagesSortedByColumn(column) {
+  const client = new Client(config); // creating our database Client with our config values
+  await client.connect();
+  let result = await client.query(`SELECT * FROM programming_languages ORDER BY ${column}`);
+  console.log(result.rows);
+  await client.end();
+  return result.rows;
+}
+
+async function searchLanguagesByName(name) {
+  const client = new Client(config); // creating our database Client with our config values
+  await client.connect();
+  let result = await client.query(`SELECT * FROM programming_languages WHERE name ILIKE $1`, [`%${name}%`]);
+  console.log(result.rows);
+  await client.end();
+  return result.rows;
+}
+
+
 // API Endpoints
 app.get("/get-all-languages", async (req, res) => {
   //this variable stores all of the data that is going to be stored in the front end.
@@ -73,4 +101,31 @@ app.get("/get-language-by-id/:id", async (req, res) => {
 app.post("/add-one-language", async (req, res) => {
     await addOneLanguage(req.body);
     res.send("Yay! You added a language!"); //send a response to the front end
+});
+
+//Get all languages, sort by year
+app.get("/get-all-languages/sort-by-year", async (req, res) => {
+  let sortedlanguages = await getAllLanguagesSortedByYear();
+  let JSONsortedlanguages = JSON.stringify(sortedlanguages);
+  res.send(JSONsortedlanguages);
+
+});
+
+//get all languages, sorty by column: return a list of all of the programming languages,
+//sorted by a column specified by the user, in ascending order.
+
+app.get("/get-all-languages/sort-by/:column", async (req, res) => {
+  let column = req.params.column;
+  let sortedlanguages = await getAllLanguagesSortedByColumn(column);
+  let JSONsortedlanguages = JSON.stringify(sortedlanguages);
+  res.send(JSONsortedlanguages);
+});
+
+// api endpoint returns a list of all the programming languages that match the search term
+
+app.get("/search-languages-by-name/:name", async (req, res) => {
+  let name = req.params.name;
+  let language = await searchLanguagesByName(name);
+  let JSONlanguage = JSON.stringify(language);
+  res.send(JSONlanguage);
 });
